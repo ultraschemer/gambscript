@@ -7,17 +7,17 @@
 (##include "~~lib/_with-syntax-boot.scm")
 (##include "default-macros.scm")
 
-;;
-;; Call/cc Support:
-;;
+;;;
+;;; Call/cc Support:
+;;;
 (define (##call-with-current-continuation f)
   (##continuation-capture
    (lambda (k)
      (f (lambda (r) (##continuation-return-no-winding k r))))))
- 
-;;
-;; List support:
-;;
+
+;;;
+;;; List support:
+;;;
 (define (##append lst1 lst2)
   (if (pair? lst1)
       (cons (car lst1) (append (cdr lst1) lst2))
@@ -29,11 +29,11 @@
 
 (define append ##append)
 
-; (define (##list->vector lst) '())
+;;; (define (##list->vector lst) '())
 
-;;
-;; Quasi-quotation support:
-;;
+;;;
+;;; Quasi-quotation support:
+;;;
 (define (##quasi-list . lst) lst)
 (define (##quasi-cons obj1 obj2) (##cons obj1 obj2))
 (define (##quasi-vector . lst) (##quasi-list->vector lst))
@@ -42,16 +42,16 @@
 (define (##quasi-append lst1 lst2)
   (##append lst1 lst2)) ;; need to define ##append too!
 
-;;
-;; String support:
-;;
+;;;
+;;; String support:
+;;;
 (define (##string-append . strs)
   (let ((base-string-append 
-          (lambda (str1 str2) 
-            (let ((s "")) 
-              (##inline-host-statement 
-                "@1@.codes = @2@.codes.concat(@3@.codes);" s str1 str2)
-              s))))
+         (lambda (str1 str2) 
+           (let ((s "")) 
+             (##inline-host-statement 
+              "@1@.codes = @2@.codes.concat(@3@.codes);" s str1 str2)
+             s))))
     (case (length strs)
       ((0)  "")
       ((1)  strs)
@@ -63,18 +63,18 @@
 (define (##string=? str1 str2)
   (!e "P(@1@) === P(@2@)" str1 str2))
 
-;;
-;; Control flows:
-;;
+;;;
+;;; Control flows:
+;;;
 (define (for-each f lst)
   (if (pair? lst)
       (begin
         (f (car lst))
         (for-each f (cdr lst)))))
 
-;;
-;; Javascript integration support
-;;
+;;;
+;;; Javascript integration support
+;;;
 (define (current-milliseconds)
   (##inline-host-expression "Date.now()"))
 
@@ -90,9 +90,9 @@
 (define (make-random-string strlen)
   (!e "R(makeRandomString(P(@1@)))" strlen))
 
-;;
-;; Explicit Javascript integration:
-;;
+;;;
+;;; Explicit Javascript integration:
+;;;
 (define (!js-global name obj)
   (##inline-host-statement 
    "if(global) {
@@ -143,7 +143,7 @@
 (define (!js-object-set! object name value)
   (let ((n (if (##symbol? name) (symbol->string name) name))) 
     (##inline-host-statement 
-      "(function() {
+     "(function() {
         const obj = @1@;
         const name = g_scm2host(@2@);
         const value = g_scm2host(@3@);
@@ -156,7 +156,7 @@
 (define (!js-object-raw-set! object name value) 
   (let ((n (if (##symbol? name) (symbol->string name) name))) 
     (##inline-host-statement 
-      "(function() {
+     "(function() {
         const obj = @1@;
         const name = g_scm2host(@2@);
         const value = @3@;
@@ -188,5 +188,5 @@
 (define !obj-raw-get !js-object-raw-get)
 (define !raw-get !js-object-raw-get)
 
-; Linking entry:
+;;; Linking entry:
 (app#)
