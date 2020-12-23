@@ -1,6 +1,6 @@
 {
-  "name": "gambscript-template2",
-  "version": "0.0.1",
+  "name": "gambscript",
+  "version": "0.1.0",
   "description": "Gambscript template with only Javascript and GSC as dependencies.",
   "main": "index.js",
   "repository": "https://github.com/ultraschemer/gambscript-template2",
