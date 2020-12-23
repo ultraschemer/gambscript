@@ -216,7 +216,7 @@ async function create(module) {
           '\n' +
           l.replace(
             '***DEFAULT-MACROS-PATH***',
-            '../node_modules/gambscript-template2/scheme/default-macros.scm'
+            '../node_modules/gambscript/scheme/default-macros.scm'
           )
       })
       await SaveFile(path.join(module, 'app.scm'), appContents)
