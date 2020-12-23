@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Gambscript template with only Javascript and GSC as dependencies.",
   "main": "index.js",
-  "repository": "https://github.com/ultraschemer/gambscript-template2",
+  "repository": "https://github.com/ultraschemer/gambscript",
   "author": "Paulo Silva Filho",
   "license": "BSD-3-Clause",
   "scripts": {
