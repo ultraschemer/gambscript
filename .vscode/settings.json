@@ -1,0 +1,14 @@
+{
+  "svg.preview.background": "transparent",
+  "prettier.singleQuote": true,
+  "prettier.semi": false,
+  "prettier.useTabs": false,
+  "prettier.tabWidth": 2,
+  "editor.tabSize": 2,
+  "prettier.printWidth": 100,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}

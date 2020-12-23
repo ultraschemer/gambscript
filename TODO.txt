@@ -1,0 +1,79 @@
+To Version 0.0
+
+#1 - Support single export point (Compatibility to CommonJS): [OK]
+(!js-export name object)
+
+#2 - Create Javascript Objects on fly: [OK]
+(define object (!js-object))
+(!js-obj-set object name (some-value))
+(!js-obj-set object name (some-lambda-func))
+(!js-obj-set object "name" (some-value))
+(!js-obj-set object "name" (some-lambda-func))
+(!js-obj-set "object" name (some-value))
+(!js-obj-set "object" name (some-lambda-func))
+(!js-obj-set "object" "name" (some-value))
+(!js-obj-set "object" "name" (some-lambda-func))
+(!js-obj-get object name)
+(!js-obj-get object "name")
+(!js-obj-get "object" name)
+(!js-obj-get "object" "name")
+; Alias to !js-obj-set = !set, !js-obj-get = !get
+(!set object name (some-value))
+(!set object name (some-lambda-func))
+(!set object "name" (some-value))
+(!set object "name" (some-lambda-func))
+(!set "object" name (some-value))
+(!set "object" name (some-lambda-func))
+(!set "object" "name" (some-value))
+(!set "object" "name" (some-lambda-func))
+(!get object name)
+(!get object "name")
+(!get "object" name)
+(!get "object" "name")
+; Export object
+(!js-export name object)
+(!js-export "name" object)
+
+#3 - Support Javascript Import: [OK]
+(!js-require _ underscore)
+(!js-require _ "underscore")
+
+To Version 0.1.0
+#4 - Add Object method call support
+#4.1 - Expressions:
+(!js-expression-call object method ...)
+(!js-e-call object method ...)
+(!js-x-call object method ...)
+(!js-call object method ...)
+(!call object method ...)
+(!! object method ...)
+#4.2 - Statements:
+(!js-statement-call object method ...)
+(!js-s-call object method ...)
+(!s-call object method ...)
+(!!! object method ...)
+
+#5 - Add Promises handling (CreatePromise, Then, Catch) support
+(!js-async promise then-lambda then-lambda ... catch-lambda)
+
+#6 - Add Javascript class definition support
+(!js-class ClassName
+  (!js-instance-var var1)
+  (!js-instance-var var2 "Variable Content")
+  (!js-class-method var3)
+  (!js-class-method var4 "Variable Content")
+  (!js-instance-var "var5")
+  (!js-instance-var "var6" "Variable Content")
+  (!js-class-method "var7")
+  (!js-class-method "var8" "Variable Content")
+  (!js-method instanceMethod (lambda (self ...)
+    ...))
+  (!js-class-method classMethod (lambda (classObject ...)
+    ...))
+  (!js-method "instanceMethod2" (lambda (self ...)
+    ...))
+  (!js-class-method "classMethod2" (lambda (classObject ...)
+    ...)))
+
+To next versions
+# To be defined - no more features being planned.
