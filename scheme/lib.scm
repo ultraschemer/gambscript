@@ -143,12 +143,7 @@
 (define (!js-object-set! object name value)
   (let ((n (if (##symbol? name) (symbol->string name) name))) 
     (##inline-host-statement 
-     "(function() {
-        const obj = @1@;
-        const name = g_scm2host(@2@);
-        const value = g_scm2host(@3@);
-        obj[name] = value;
-      })();" object n value)))
+     "@1@[g_scm2host(@2@)] = g_scm2host(@3@);" object n value)))
 (define !js-obj-set! !js-object-set!)
 (define !obj-set! !js-object-set!)
 (define !set! !js-object-set!)
@@ -156,34 +151,21 @@
 (define (!js-object-raw-set! object name value) 
   (let ((n (if (##symbol? name) (symbol->string name) name))) 
     (##inline-host-statement 
-     "(function() {
-        const obj = @1@;
-        const name = g_scm2host(@2@);
-        const value = @3@;
-        obj[name] = value;
-      })();" object n value)))
+     "@1@[g_scm2host(@2@)] = @3@;" object n value)))
 (define !js-obj-raw-set! !js-object-raw-set)
 (define !obj-raw-set! !js-object-raw-set)
 (define !raw-set! !js-object-raw-set)
 
 (define (!js-object-get object name)
   (let ((n (if (##symbol? name) (symbol->string name) name)))
-    (!e "g_host2scm((function(){
-      const obj = @1@;
-      const name = g_scm2host(@2@);
-      return obj[name];
-    })())" object n)))
+    (!e "g_host2scm(@1@[g_scm2host(@2@)])" object n)))
 (define !js-obj-get !js-object-get)
 (define !obj-get !js-object-get)
 (define !get !js-object-get)
 
 (define (!js-object-raw-get object name)
   (let ((n (if (##symbol? name) (symbol->string name) name)))
-    (!e "(function(){
-      const obj = @1@;
-      const name = g_scm2host(@2@);
-      return obj[name];
-    })()" object n)))
+    (!e "@1@[g_scm2host(@2@)]" object n)))
 (define !js-obj-raw-get !js-object-raw-get)
 (define !obj-raw-get !js-object-raw-get)
 (define !raw-get !js-object-raw-get)

@@ -7,10 +7,10 @@
 ;;; javascript expression
 (define-macro (!x . params) `(##inline-host-expression ,@params))
 
-(define-macro (function-apply-parameters)
+(define-macro (function-apply-parameters init-value)
   `(lambda (params) 
      (let ((sz (length params)))
-       (let loop ((i 0) (res "") (initializer ""))
+       (let loop ((i init-value) (res "") (initializer ""))
 	        (if (= i sz) 
              res
              (loop (+ i 1) 
@@ -24,7 +24,7 @@
 
 ;;; Statement Apply (used to call functions as statements in a more Schemey way)
 (define-macro (!sa name . args)
-  (let ((r (function-apply-parameters)))
+  (let ((r (function-apply-parameters 0)))
     (if (symbol? name) 
 	    `(##inline-host-statement 
               ,(string-append (symbol->string name) "(" (r args) ");") 
@@ -35,7 +35,7 @@
 
 ;;; Expression Apply (used to call javascript functions as expressions in a more Schemey way)
 (define-macro (!ea name . args)
-  (let ((r (function-apply-parameters)))
+  (let ((r (function-apply-parameters 0)))
     (if (symbol? name) 
 	    `(##inline-host-expression 
               ,(string-append (symbol->string name) "(" (r args) ")") 
@@ -46,7 +46,7 @@
 
 ;;; Expression Apply (used to call functions as expressions in a more Schemey way)
 (define-macro (!xa name . args)
-  (let ((r (function-apply-parameters)))
+  (let ((r (function-apply-parameters 0)))
     (if (symbol? name) 
 	    `(##inline-host-expression 
               ,(string-append (symbol->string name) "(" (r args) ")") 
