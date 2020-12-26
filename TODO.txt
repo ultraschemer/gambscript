@@ -41,12 +41,20 @@ To Version 0.0
 To Version 0.1.0
 #4 - Add Object method call support
 #4.1 - Expressions:
+#4.1.1 - Converted call (return is converted using the host2scm function):
 (!js-expression-call object method ...)
 (!js-e-call object method ...)
 (!js-x-call object method ...)
 (!js-call object method ...)
 (!call object method ...)
 (!! object method ...)
+#4.1.2 - Raw call (return is not converted using the host2scm function):
+(!js-expression-raw-call object method ...)
+(!js-e-rcall object method ...)
+(!js-x-rcall object method ...)
+(!js-rcall object method ...)
+(!rcall object method ...)
+(!!r object method ...)
 #4.2 - Statements:
 (!js-statement-call object method ...)
 (!js-s-call object method ...)
