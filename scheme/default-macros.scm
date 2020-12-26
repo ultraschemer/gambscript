@@ -13,7 +13,7 @@
       ((r (lambda (params) 
             (let ((sz (length params)))
               (let loop ((i 0) (res "") (initializer ""))
-		(if (= i sz) 
+		            (if (= i sz) 
                     res
                     (loop (+ i 1) 
                           (string-append 
@@ -24,10 +24,10 @@
                            "@)")
                           ",")))))))
     (if (symbol? name) 
-	`(##inline-host-statement 
+	    `(##inline-host-statement 
           ,(string-append (symbol->string name) "(" (r args) ");") 
           ,@args)
-	`(##inline-host-statement 
+	    `(##inline-host-statement 
           ,(string-append name "(" (r args) ");") 
           ,@args))))
 
@@ -37,7 +37,7 @@
       ((r (lambda (params) 
             (let ((sz (length params)))
               (let loop ((i 0) (res "") (initializer ""))
-		(if (= i sz) 
+		            (if (= i sz) 
                     res
                     (loop (+ i 1) 
                           (string-append 
@@ -49,10 +49,10 @@
                           ",")))))))
 
     (if (symbol? name) 
-	`(##inline-host-expression 
+	    `(##inline-host-expression 
           ,(string-append (symbol->string name) "(" (r args) ")") 
           ,@args)
-	`(##inline-host-expression 
+	    `(##inline-host-expression 
           ,(string-append name "(" (r args) ")") 
           ,@args))))
 
@@ -62,7 +62,7 @@
       ((r (lambda (params) 
             (let ((sz (length params)))
               (let loop ((i 0) (res "") (initializer ""))
-		(if (= i sz) 
+		            (if (= i sz) 
                     res
                     (loop (+ i 1) 
                           (string-append 
@@ -74,10 +74,10 @@
                           ",")))))))
     
     (if (symbol? name) 
-	`(##inline-host-expression 
+	    `(##inline-host-expression 
           ,(string-append (symbol->string name) "(" (r args) ")") 
           ,@args)
-	`(##inline-host-expression
+	    `(##inline-host-expression
           ,(string-append name "(" (r args) ")") 
           ,@args))))
 

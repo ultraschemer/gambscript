@@ -115,33 +115,50 @@ async function transpile(module, outdir) {
       '(define-cond-expand-feature| disable-ratnum|)(define-cond-expand-feature| disable-cpxnum|)' +
       '(define-cond-expand-feature|disable-smp|)" -target js '
 
-    const packageName = path.join(process.cwd(), outdir, module)
+    const buildPackageName = path.join(process.cwd(), '.gambscript', outdir, module)
+    const outputDirectory = path.join(process.cwd(), outdir)
+    const packageName = path.join(outputDirectory, module + '.js')
     const sourceName = path.join(path.dirname(__dirname), 'scheme')
-    if (!fs.existsSync(packageName)) {
-      fs.mkdirSync(packageName, { recursive: true })
+    if (!fs.existsSync(buildPackageName)) {
+      fs.mkdirSync(buildPackageName, { recursive: true })
+    }
+    if (!fs.existsSync(outputDirectory)) {
+      fs.mkdirSync(outputDirectory, { recursive: true })
+    }
+    if (
+      module.split(path.sep).length > 0 ||
+      module.split('\\').length > 0 ||
+      module.split('/').length > 0
+    ) {
+      let dirname = path.join(outputDirectory, path.dirname(module))
+      if (!fs.existsSync(dirname)) {
+        fs.mkdirSync(dirname, { recursive: true })
+      }
     }
 
     console.log('Building the application...')
-    await Exec(`${gsc} -o ${path.join(packageName, 'app.js')} -c ${path.join(module, 'app.scm')}`)
+    await Exec(
+      `${gsc} -o ${path.join(buildPackageName, 'app.js')} -c ${path.join(module, 'app.scm')}`
+    )
     console.log()
 
     console.log('Building the default library...')
     process.chdir(path.join(path.dirname(__dirname), 'scheme'))
     await Exec(
-      `${gsc} -o ${path.join(packageName, 'lib.js')} -c ${path.join(sourceName, 'lib.scm')}`
+      `${gsc} -o ${path.join(buildPackageName, 'lib.js')} -c ${path.join(sourceName, 'lib.scm')}`
     )
     console.log()
 
     console.log('Linking the application...')
-    process.chdir(path.join(packageName))
+    process.chdir(path.join(buildPackageName))
     await Exec(`${gsc} -link -l lib app.js`)
     console.log()
 
     const utils = await ReadFile(path.join(sourceName, '__javascript-support', 'utils.js'))
 
-    const app_ = await ReadFile(path.join(packageName, 'app_.js'))
-    const lib = await ReadFile(path.join(packageName, 'lib.js'))
-    const app = await ReadFile(path.join(packageName, 'app.js'))
+    const app_ = await ReadFile(path.join(buildPackageName, 'app_.js'))
+    const lib = await ReadFile(path.join(buildPackageName, 'lib.js'))
+    const app = await ReadFile(path.join(buildPackageName, 'app.js'))
     const linkedApplication = `${app_}\n${lib}\n${app}`
     const readFunctions = new Set([])
     const readvariables = new Set([])
@@ -189,10 +206,13 @@ async function transpile(module, outdir) {
     processedLinkedApplication += '\nconst P = g_scm2host;'
     processedLinkedApplication += '\nconst R = g_host2scm;\n'
     await SaveFile(
-      path.join(packageName, 'index.js'),
+      path.join(buildPackageName, 'index.js'),
       requirements.join('\n') + '\n\n\n' + utils + '\n\n\n' + processedLinkedApplication
     )
     console.log('Finished building scheme Module.\n')
+
+    await Copy(path.join(buildPackageName, 'index.js'), packageName)
+    console.log(`Finished releasing new generated module: ${packageName}\n`)
   } catch (e) {
     console.log('CSS and JAVASCRIPT preprocessor error: ', e)
   }
@@ -211,12 +231,23 @@ async function create(module) {
       const schemeFileDirectory = path.join(path.dirname(__dirname), 'scheme')
       const appModel = await ReadFile(path.join(schemeFileDirectory, 'app-model.scm'))
       let appContents = ''
+      let head = ['..']
+      if (module.split(path.sep).length > 1) {
+        head = [...new Array(module.split(path.sep).length).keys()].map(() => '..')
+      } else if (module.split('/').length > 1) {
+        head = [...new Array(module.split('/').length).keys()].map(() => '..')
+      } else if (module.split('\\').length > 1) {
+        head = [...new Array(module.split('\\').length), keys()].map(() => '..')
+      }
+
+      console.log('HEAD: ', head)
+
       appModel.split('\n').forEach((l) => {
         appContents +=
           '\n' +
           l.replace(
             '***DEFAULT-MACROS-PATH***',
-            '../node_modules/gambscript/scheme/default-macros.scm'
+            head.join('/') + '/node_modules/gambscript/scheme/default-macros.scm'
           )
       })
       await SaveFile(path.join(module, 'app.scm'), appContents)
