@@ -1,6 +1,5 @@
 node_modules
 public/javascript/bundle.js
-src/gambscript-template2
 
 # Logs
 logs
