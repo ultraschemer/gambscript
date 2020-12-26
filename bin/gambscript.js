@@ -242,11 +242,10 @@ async function create(module) {
 
       appModel.split('\n').forEach((l) => {
         appContents +=
-          '\n' +
           l.replace(
             '***DEFAULT-MACROS-PATH***',
             head.join('/') + '/node_modules/gambscript/scheme/default-macros.scm'
-          )
+          ) + '\n'
       })
       await SaveFile(path.join(module, 'app.scm'), appContents)
     } catch (error) {
