@@ -58,7 +58,7 @@
 
 ;;; Expression Apply (used to call functions as expressions in a more Schemey way)
 (define-macro (!xa name . args)
-  `(!ea ,name ,args))
+  `(!ea ,name ,@args))
 
 ;;; Import macro:
 (define-macro (!js-require name library)
@@ -163,16 +163,16 @@
       ,(string-append "@1@[g_scm2host(@2@)](" (r args) ");") 
       ,object 
       ,(if (symbol? method) (symbol->string method) method) 
-      ,@args))
+      ,@args)))
 
 (define-macro (!js-s-call object method . args)
-  `(!js-statement-call ,object ,method ,@args)
+  `(!js-statement-call ,object ,method ,@args))
 
 (define-macro (!s-call object method . args)
-  `(!js-statement-call ,object ,method ,@args)
+  `(!js-statement-call ,object ,method ,@args))
   
 (define-macro (!scall object method . args)
-  `(!js-statement-call ,object ,method ,@args)
+  `(!js-statement-call ,object ,method ,@args))
 
 (define-macro (!!! object method . args)
-  `(!js-statement-call ,object ,method ,@args)
+  `(!js-statement-call ,object ,method ,@args))
