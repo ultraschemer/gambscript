@@ -240,8 +240,6 @@ async function create(module) {
         head = [...new Array(module.split('\\').length), keys()].map(() => '..')
       }
 
-      console.log('HEAD: ', head)
-
       appModel.split('\n').forEach((l) => {
         appContents +=
           '\n' +
