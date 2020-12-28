@@ -1,10 +1,10 @@
 # Gambit Scheme Scripts Called under Javascript/Webpack Control
 
-# Introduction
+## Introduction
 
 Gambscript is a utility to create **Gambit Scheme** Javascript Modules, from scheme source code. The first two sections of this document are conceptual. If you aren't interested in how Gambscript works internally, you can skip them, and go to the third section, **Tutorial**.
 
-## Motivation and Rationale
+## 1. Motivation and Rationale
 
 [**Gambit scheme**](https://github.com/gambit/gambit) has a fairly complete Scheme->Javascript transpiler, suitable to implement full programs and applications on [Node.js](https://nodejs.org) platform, from Scheme scripts.
 
@@ -28,7 +28,7 @@ The first version of this project (v0.1.0) has been able to reach this objective
 
 The default Gambscript library will be focused on in facilities to permit integration of Javascript language and Webpack with Gambit Scheme projects. The provided facilities in the default library will exist only to serve this purpose.
 
-## How Gambscript Works
+## 2. How Gambscript Works
 
 Gambscript is a simple command line tool that load a specific scheme script, which is the endpoint of the Scheme Module, and transpile it to Javascript, using Gambit Scheme.
 
@@ -69,3 +69,21 @@ After the user developed his/her scheme code, he/she can use Webpack normally, t
 14. **Release Final Javascript Bundle:** After the entire project is built, the user can choose to release the final bundle to public in the way he/she wishes.
 
 The code of Gambscript, at _"node_modules/gambscript/bin/gambscript.js"_ is implemented with proper comments, to reflect the compilation steps required to generate compatible CommonJS and Webpack Javascript modules from Scheme source code.
+
+## 3. Tutorial
+
+Here we present a tutorial on how to use Gambscript.
+
+### 3.1. Pre-requisites
+
+To use Gambscript you need a proper installation of **Node.js**, **NPM** or **Yarn**, and **Gambit-C Scheme compiler, with Javascript Backend enabled**. The installation of these dependencies are beyond the scope of this document. Gambscript has been tested on Windows 10, 64Bit, and Linux Ubuntu 18.04. Testing on Mac OS X will be provided in future releases.
+
+### 3.2. Installing Gambscript
+
+The best way to install Gambscript is per project, not in the Global environment. To do so, just start a new Npm (or Yarn) project:
+
+```sh
+npm init gambscript-demo
+```
+
+**_TODO: TBD_**
