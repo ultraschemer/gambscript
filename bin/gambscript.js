@@ -77,6 +77,11 @@ function Copy(origin, target) {
   })
 }
 
+/**
+ * Convert asynchronous function writeFile, from Node File System module, to a promise.
+ * @param {string} fname The name of the file to be saved.
+ * @param {string} contents The contents to be saved in the file.
+ */
 function SaveFile(fname, contents) {
   return new Promise((res, err) => {
     fs.writeFile(fname, contents, (error) => {
@@ -87,6 +92,10 @@ function SaveFile(fname, contents) {
   })
 }
 
+/**
+ * Convert asynchronous function readFile, from Node File System module, to a promise.
+ * @param {string} fname
+ */
 function ReadFile(fname) {
   return new Promise((res, err) => {
     fs.readFile(fname, 'utf8', (error, data) => {
@@ -99,6 +108,10 @@ function ReadFile(fname) {
   })
 }
 
+/**
+ * TODO
+ * @param {string} command TODO
+ */
 function Exec(command) {
   console.log(command)
   return new Promise((res, err) => {
