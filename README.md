@@ -93,7 +93,7 @@ Answer the `npm init` questions with the best answers to you.
 After creating the project, let's install gambscript locally. Currently, no public NPM package exists to Gambscript. So we need to install it directly from the git repository:
 
 ```sh
-$ npm install ultraschemer/gambscript#v0.1.0 --save --only=dev
+$ npm install --save-dev ultraschemer/gambscript#v0.1.0
 ```
 
 After installing Gambscript, it's possible to run it using the **npx** facility:
@@ -126,7 +126,7 @@ As you can see, a folder called `demo`, with a single Scheme script, called `app
 
 We can build a javascript module from the `demo` Scheme module using the next command:
 
-```
+```sh
 $ cd .. # return to the project root directory
 $ npx gambscript transpile demo
 Building the application...
@@ -155,8 +155,132 @@ The parameter given to `transpile` Gambscript option must be the same given to t
 
 After building the module, it's possible to see that it's output to the file `<project-root>/src/demo.js`. By default, all Gambscript modules are exported to a `<project-root>/src` folder. The user can override this option, just adding an additional parameter to the `transpile` command. This last option will be the output directory to generate the Javascript module. The Javascript module name is always the name of the original module directory (created by `gambscript create`, followed by `.js`).
 
-So, now, you'll have a valid CommonJS `demo` package, which can be imported by Node.js, and your project structure will be equals that shown in the image below:
+So, now, you'll have a valid CommonJS `demo` module, which can be imported by Node.js, and your project structure will be equals that shown in the image below (using the VSCode editor):
 
-...
+![Gambscript Demo Project Structure](Demo-Project-Structure.png)
 
-**_TODO: TBD_**
+You can test the generated `demo` module, as shown in the code below:
+
+```sh
+$ # You must be at the project root directory
+$ node
+> require("./src/demo")
+{ application: [Function: procedure], variable: 10 }
+> const d = require("./src/demo")
+undefined
+> d.variable
+10
+> d.application()
+Application entry point.
+undefined
+> .exit
+
+$
+```
+
+The main objective of Gambscript is to be compatible with Webpack and then enable the development of full-fledged professional Web applications using Scheme. So, the next part of this tutorial is to create a suitable Webpack configuration for this project, and load the generated Scheme Module in a Web application.
+
+Let's start installing Webpack dependencies:
+
+```sh
+$ # You must be at the project root directory
+$ npm install --save-dev @babel/core
+$ npm install --save-dev @babel/preset-env
+$ npm install --save-dev babel-loader
+$ npm install --save-dev css-loader
+$ npm install --save-dev source-map-loader@^1.1.0
+$ npm install --save-dev style-loader
+$ npm install --save-dev webpack
+$ npm install --save-dev webpack-cli
+$ npm install --save-dev webpack-node-externals
+```
+
+The packages selected above are fairly suitable to the vast majority of Webpack compatible projects. Obviously, you can use any configuration and packages to your project, but the selection above just works, if you don't want to be concerned with the exact selection of dependencies you need to run a Webpack enabled Gambscript project (and, unfortunately, dependency hell is a sad reality in Webpack/Node.js projects).
+
+Now let's install some Javascript nodule to be used by the bundled project, to be released to the Web application and runnable in the browser:
+
+```sh
+$ # You must be at the project root directory
+$ npm install --save underscore
+```
+
+We need, now, suitable configuration files to [Babel](https://babeljs.io/) and Webpack. (Obs.: It's possible to create _jsconfig.json_ and _tsconfig.json_ files to compatibilize the project to Javascript and Typescript custom modules too, but these are outside the scope of this document. See the demo project available [here](https://github.com/ultraschemer/gambscript-template-test), as a sample.).
+
+Create, in the root directory, the _webpack.config.js_ file, containing:
+
+```Javascript
+const path = require('path')
+
+module.exports = (env) => {
+  const isProduction = env === 'production'
+  return {
+    entry: './src/index.js',
+    module: {
+      rules: [
+        {
+          test: /\.js$/,
+          exclude: /node_modules|server/,
+          use: {
+            loader: 'babel-loader',
+          },
+        },
+        {
+          enforce: 'pre',
+          test: /\.js$/,
+          loader: 'source-map-loader',
+        },
+        {
+          test: /\.css$/i,
+          use: ['style-loader', 'css-loader'],
+        },
+      ],
+    },
+    output: {
+      filename: 'public/javascript/bundle.js',
+      path: path.resolve(__dirname),
+    },
+    resolve: {
+      modules: ['node_modules', 'src'],
+    },
+    optimization: {
+      minimize: true,
+      mergeDuplicateChunks: false,
+    },
+    devtool: isProduction ? 'none' : 'inline-source-map',
+    devtool: 'none'
+  }
+}
+
+```
+
+And save the project.
+
+As you can see, it's necessary to create an _src/index.js_ file, which is the entry point of the entire Webpack project, and a _public_ folder, with the HTML which will receive the Webpack bundle.
+
+Create the _src/index.js_ file, and put the next listing as its contents:
+
+```Javascript
+import { application, variable } from './testbed'
+
+document.write('Starting something here - variable: ', variable)
+application()
+```
+
+As you can see, the _index.js_ code is compatible with ES6. Outside the Gambscript generated module (_src/demo.js_) you can use ES6 Javascript code normally - just enable CommonJS handling in Webpack (currently setted as default - no need of extra Babel configuration files).
+
+Then, create a _public_ folder, and add in it an _index.html_ as shown below:
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gambscript test</title>
+  </head>
+  <body>
+    <script src="javascript/bundle.js"></script>
+  </body>
+</html>
+```
+
+The HTML file above import the script file _javascript/bundle.js_. This file will be generated by webpack.
