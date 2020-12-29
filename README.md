@@ -178,7 +178,7 @@ undefined
 $
 ```
 
-## 3.3. Enabling Webpack to use Gambscript Scheme Modules
+### 3.3. Enabling Webpack to use Gambscript Scheme Modules
 
 The main objective of Gambscript is to be compatible with Webpack and then enable the development of full-fledged professional Web applications using Scheme. So, the next part of this tutorial is to create a suitable Webpack configuration for this project, and load the generated Scheme Module in a Web application.
 
@@ -330,7 +330,7 @@ cacheable modules 368 KiB
 webpack 5.11.1 compiled successfully in 2487 ms
 ```
 
-## 3.4. Developing Gambscript Scheme Scripts
+### 3.4. Developing Gambscript Scheme Scripts
 
 Now we installed Gambscript and enabled it to be used with Webpack modules, we need to learn how to implement code and logic in Scheme and use them in Webpack modules.
 
