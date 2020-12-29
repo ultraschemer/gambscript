@@ -6,6 +6,9 @@ const { exec } = require('child_process')
 
 const [node, script, ...args] = process.argv
 
+/**
+ * Show usage text and exit back to shell.
+ */
 function usage() {
   console.log('Usage: ')
   console.log('\t[npx ]gambscript create <module-name>')
@@ -56,6 +59,12 @@ const referenceDirectory = process.env['BUILD_REFERENCE_DIRECTORY']
   ? process.env['BUILD_REFERENCE_DIRECTORY']
   : __dirname
 
+/**
+ * Convert ncp recursive copy function to a promise, to be used in async/await functions.
+ * @param {string} origin Path of the original file to be copied.
+ * @param {string} target Path where the copy will be pasted.
+ * @return {Promise} The promise representing the asynchronous call to ncp.
+ */
 function Copy(origin, target) {
   return new Promise((res, err) => {
     ncp(origin, target, function (e) {
