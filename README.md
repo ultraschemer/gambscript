@@ -68,7 +68,7 @@ After the user developed his/her scheme code, he/she can use Webpack normally, t
 13. **Webpack Javascript Preprocessing and Compilation:** Once Webpack is called, it can perform its transpilation and processing tasks, normaly, generating the project bundle, as expected.
 14. **Release Final Javascript Bundle:** After the entire project is built, the user can choose to release the final bundle to public in the way he/she wishes.
 
-The code of Gambscript, at _"node_modules/gambscript/bin/gambscript.js"_ is implemented with proper comments, to reflect the compilation steps required to generate compatible CommonJS and Webpack Javascript modules from Scheme source code.
+The code of Gambscript, at _"node_modules/gambscript/bin/gambscript.js"_ is implemented with comments to reflect the compilation steps required to generate compatible CommonJS and Webpack Javascript modules from Scheme source code.
 
 ## 3. Tutorial
 
@@ -83,7 +83,80 @@ To use Gambscript you need a proper installation of **Node.js**, **NPM** or **Ya
 The best way to install Gambscript is per project, not in the Global environment. To do so, just start a new Npm (or Yarn) project:
 
 ```sh
-npm init gambscript-demo
+$ mkdir gambscript-demo
+$ cd gambscript-demo
+$ npm init
 ```
+
+Answer the `npm init` questions with the best answers to you.
+
+After creating the project, let's install gambscript locally. Currently, no public NPM package exists to Gambscript. So we need to install it directly from the git repository:
+
+```sh
+$ npm install ultraschemer/gambscript#v0.1.0 --save --only=dev
+```
+
+After installing Gambscript, it's possible to run it using the **npx** facility:
+
+```sh
+$ npx gambscript
+Module name is missing.
+
+Usage:
+        [npx ]gambscript create <module-name>
+        [npx ]gambscript transpile <module-name> [<output-directory>]
+
+The default <output-directory> value is "./src"
+```
+
+As you can see, if you run gambscript without any parameter, a little explanation about how to use it is show in the standard output.
+
+Let's create a first simple module:
+
+```sh
+$ npx gambscript create demo
+
+$ cd demo
+$ ls
+app.scm
+
+```
+
+As you can see, a folder called `demo`, with a single Scheme script, called `app.scm`, is created. You can consider this folder as an entire Scheme project. This Scheme project must have its entrypoint registered in the `app.scm` file, and it can include other scheme files, using the Gambit Scheme **##include** facility. Apart this, the structure of your Scheme project is completely under the responsibility of the user.
+
+We can build a javascript module from the `demo` Scheme module using the next command:
+
+```
+$ cd .. # return to the project root directory
+$ npx gambscript transpile demo
+Building the application...
+gsc -prelude "(define-cond-expand-feature|enable-type-checking|)(define-cond-expand-feature|disable-auto-forcing|)(define-cond-expand-feature| disable-sharp-dot|)(define-cond-expand-feature| disable-bignum|)(define-cond-expand-feature| disable-ratnum|)(define-cond-expand-feature| disable-cpxnum|)(define-cond-expand-feature|disable-smp|)" -target js  -o D:\Ultraschemer\gambscript-demo\.gambscript\src\demo\app.js -c demo\app.scm
+
+
+
+Building the default library...
+gsc -prelude "(define-cond-expand-feature|enable-type-checking|)(define-cond-expand-feature|disable-auto-forcing|)(define-cond-expand-feature| disable-sharp-dot|)(define-cond-expand-feature| disable-bignum|)(define-cond-expand-feature| disable-ratnum|)(define-cond-expand-feature| disable-cpxnum|)(define-cond-expand-feature|disable-smp|)" -target js  -o D:\Ultraschemer\gambscript-demo\.gambscript\src\demo\lib.js -c D:\Ultraschemer\gambscript-demo\node_modules\gambscript\scheme\lib.scm
+
+
+
+Linking the application...
+gsc -prelude "(define-cond-expand-feature|enable-type-checking|)(define-cond-expand-feature|disable-auto-forcing|)(define-cond-expand-feature| disable-sharp-dot|)(define-cond-expand-feature| disable-bignum|)(define-cond-expand-feature| disable-ratnum|)(define-cond-expand-feature| disable-cpxnum|)(define-cond-expand-feature|disable-smp|)" -target js  -link -l lib app.js
+
+
+
+Finished building scheme Module.
+
+Finished releasing new generated module: D:\Ultraschemer\gambscript-demo\src\demo.js
+
+$
+```
+
+The parameter given to `transpile` Gambscript option must be the same given to the `create` option, called before. Gambscript `transpile` receives as a parameter a folder containing an `app.scm` file, as its entry point.
+
+After building the module, it's possible to see that it's output to the file `<project-root>/src/demo.js`. By default, all Gambscript modules are exported to a `<project-root>/src` folder. The user can override this option, just adding an additional parameter to the `transpile` command. This last option will be the output directory to generate the Javascript module. The Javascript module name is always the name of the original module directory (created by `gambscript create`, followed by `.js`).
+
+So, now, you'll have a valid CommonJS `demo` package, which can be imported by Node.js, and your project structure will be equals that shown in the image below:
+
+...
 
 **_TODO: TBD_**
